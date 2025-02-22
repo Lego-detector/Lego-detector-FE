@@ -38,47 +38,64 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
-      <h2 className="text-2xl font-bold mb-4">{isSignup ? "Sign Up" : "Login"}</h2>
+    <div className="md-card">
+      <h2 className="text-2xl text-white font-bold mb-4">{isSignup ? "Sign Up" : "Login"}</h2>
       {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col">
         {isSignup && (
-            <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 border rounded mb-2"
-            required
-            />
+          <div className="mb-2">
+              <label className="block mb-1" htmlFor="username">Username</label>
+              <input
+                  id="username"
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full p-2 border rounded"
+                  required
+              />
+          </div>
         )}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 border rounded mb-2"
-          required
-          />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 border rounded mb-2"
-          required
-          />
+        <div className="mb-2">
+            <label className="block mb-1" htmlFor="email">Email</label>
+            <input
+                id="email"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-2 border rounded"
+                required
+            />
+        </div>
+        <div className="mb-2">
+            <label className="block mb-1" htmlFor="password">Password</label>
+            <input
+                id="password"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 border rounded"
+                required
+            />
+        </div>
         {isSignup && (
-            <input
-            type="password"
-            placeholder="Re-enter Password"
-            value={rePassword}
-            onChange={(e) => setRePassword(e.target.value)}
-            className="w-full p-2 border rounded mb-4"
-            required
-            />
+            <div className="mb-4">
+                <label className="block mb-1" htmlFor="rePassword">Re-enter Password</label>
+                <input
+                    id="rePassword"
+                    type="password"
+                    placeholder="Re-enter Password"
+                    value={rePassword}
+                    onChange={(e) => setRePassword(e.target.value)}
+                    className="w-full p-2 border rounded"
+                    required
+                />
+            </div>
         )}
+
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
           {isSignup ? "Sign Up" : "Login"}
         </button>
