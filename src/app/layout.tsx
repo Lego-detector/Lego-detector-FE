@@ -1,21 +1,14 @@
-import { ReactNode } from "react";
-import { Navbar } from "@/modules/home/_components";
-import "@/app/globals.css";
+import "@/app/globals.css"
+import ThemeProvider from "@/modules/home/_components/ThemeProvider";
+import Layout from "@/modules/home/_components/Layout";
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-export default function Layout({ children }: LayoutProps) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
-        <div className="flex flex-col sm:flex-row h-screen">
-          <Navbar />
-          <main className="flex flex-col items-center p-6 min-h-screen w-screen bg-gray-300">
-            {children}
-          </main>
-        </div>
+      <body className="bg-gray-50 dark:bg-gray-900">
+        <ThemeProvider>
+          <Layout>{children}</Layout>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,24 +1,40 @@
+"use client";
+
 import Link from 'next/link'
+import { useContext } from 'react';
+import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
+import { ThemeContext } from './ThemeProvider';
+import { Brightness4, Brightness7 } from "@mui/icons-material";
 
 const navList = ["Home", "Signup", "Login", "Profile", "History", "Result/1"];
 
 export function Navbar() {
+  const themeContext = useContext(ThemeContext);
+  if (!themeContext) {
+    console.warn("no theme cont");
+    return null;
+  }
+  const { themeMode, toggleTheme } = themeContext;
+
   return (
-    <>
-      <nav
-        className={`fixed top-0 left-0 w-64 h-screen bg-gray-400 p-6 transition-transform duration-300`}
-      >
-        <h1 className="text-2xl font-bold mb-6 text-white sm:hidden">MyApp</h1>
-        <ul>
+    <AppBar position="static" className="bg-blue-600 dark:bg-gray-800">
+      <Toolbar className="flex justify-between items-center gap-4">
+        <Typography variant="h6" className="font-bold">
+          MyApp
+        </Typography>
+
+        <div className="flex flex-row items-center gap-4">
           {navList.map((item, index) => (
-            <li key={index} className="py-2">
-              <Link href={item === "Home" ? "/" : `/${item.toLowerCase()}`} className="block hover:bg-gray-700 p-2 rounded text-white">
-                {item}
-              </Link>
-            </li>
+            <Link key={index.toString()} href={item === "Home" ? "/" : `/${item.toLowerCase()}`} className="text-white hover:underline h-fit">
+              {item}
+            </Link>
           ))}
-        </ul>
-      </nav>
-    </>
+
+          <IconButton onClick={toggleTheme} color="inherit">
+            {themeMode === "dark" ? <Brightness7 /> : <Brightness4 />}
+          </IconButton>
+        </div>
+      </Toolbar>
+    </AppBar>
   );
 }
