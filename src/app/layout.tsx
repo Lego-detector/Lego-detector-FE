@@ -2,6 +2,11 @@ import "@/app/globals.css"
 import ThemeProvider from "@/modules/home/_components/ThemeProvider";
 import Layout from "@/modules/home/_components/Layout";
 
+export const metadata = {
+  title: 'LEGO DETECTOR',
+  description: 'LEGO Detector web application.',
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
