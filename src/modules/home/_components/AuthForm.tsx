@@ -1,106 +1,92 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, signupSchema } from '../_schemas';
+import { Button, FormControl, FormHelperText, Grid2, TextField, Typography } from '@mui/material';
 
-const URL_LOGIN = "/api/login";
-const URL_SIGNUP = "/api/signup";
+const URL_LOGIN = '/api/login';
+const URL_SIGNUP = '/api/signup';
+
+interface AuthFormData {
+  email: string;
+  password: string;
+  confirmPassword?: string;
+}
 
 export default function AuthForm({ isSignup }: { isSignup: boolean }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [rePassword, setRePassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AuthFormData>({
+    resolver: zodResolver(isSignup ? signupSchema : loginSchema),
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (isSignup && password !== rePassword) {
-      setError("Passwords do not match");
-      return;
-    }
-    
-    const response = await fetch(isSignup ? URL_SIGNUP : URL_LOGIN, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(isSignup ? { email, username, password } : { email, password }),
-    });
-
-    if (!response.ok) {
-      setError("Authentication failed");
-      return;
-    }
-
-    router.push("/");
+  const onSubmitFunc = (data: any) => {
+    console.log("Form data :", data);
+    // submit process
   };
 
   return (
-    <div className="md-card">
-      <h2 className="text-2xl text-white font-bold mb-4">{isSignup ? "Sign Up" : "Login"}</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col">
+    <Grid2
+      container
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+      padding="normal"
+    >
+      <Typography variant="h5" gutterBottom>
+        {isSignup ? 'Sign Up' : 'Login'}
+      </Typography>
+      <FormControl onSubmit={handleSubmit(onSubmitFunc)}>
+        <TextField
+          margin="normal"
+          id="email"
+          aria-describedby='email-text'
+          {...register('email')}
+          label="Email"
+          type="email"
+          variant="outlined"
+          error={!!errors.email}
+          helperText={errors.email?.message}
+          required
+        />
+        <FormHelperText id="email-text">{errors.email?.message}</FormHelperText>
+
+        <TextField
+          margin="normal"
+          id="password"
+          aria-describedby="password-text"
+          {...register('password')}
+          label="Password"
+          type="password"
+          variant="outlined"
+          error={!!errors.password}
+          helperText={errors.password?.message}
+          required
+        />
+        <FormHelperText id="password-text">{errors.password?.message}</FormHelperText>
+
         {isSignup && (
-          <div className="mb-2">
-              <label className="block mb-1" htmlFor="username">Username</label>
-              <input
-                  id="username"
-                  type="text"
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full p-2 border rounded"
-                  required
-              />
-          </div>
-        )}
-        <div className="mb-2">
-            <label className="block mb-1" htmlFor="email">Email</label>
-            <input
-                id="email"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-2 border rounded"
-                required
-            />
-        </div>
-        <div className="mb-2">
-            <label className="block mb-1" htmlFor="password">Password</label>
-            <input
-                id="password"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 border rounded"
-                required
-            />
-        </div>
-        {isSignup && (
-            <div className="mb-4">
-                <label className="block mb-1" htmlFor="rePassword">Re-enter Password</label>
-                <input
-                    id="rePassword"
-                    type="password"
-                    placeholder="Re-enter Password"
-                    value={rePassword}
-                    onChange={(e) => setRePassword(e.target.value)}
-                    className="w-full p-2 border rounded"
-                    required
-                />
-            </div>
+          <TextField
+            margin="normal"
+            id="confirmPassword"
+            aria-describedby="confirmPassword-text"
+            {...register('confirmPassword')}
+            label="Confirm password"
+            type="password"
+            variant="outlined"
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword?.message}
+            required
+          />
         )}
 
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-          {isSignup ? "Sign Up" : "Login"}
-        </button>
-        </div>
-      </form>
-    </div>
+        <Button type="submit" variant="outlined">
+          {isSignup ? 'Sign Up' : 'Login'}
+        </Button>
+      </FormControl>
+    </Grid2>
   );
 }
