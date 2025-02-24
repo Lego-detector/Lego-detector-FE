@@ -1,40 +1,161 @@
 "use client";
 
-import Link from 'next/link'
-import { useContext } from 'react';
-import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
-import { ThemeContext } from './ThemeProvider';
-import { Brightness4, Brightness7 } from "@mui/icons-material";
+import Link from 'next/link';
+import { useState, MouseEvent } from 'react';
+import { AppBar, Button, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography, Tooltip, Avatar } from '@mui/material';
+import { Adb as AdbIcon, Menu as MenuIcon } from '@mui/icons-material';
 
-const navList = ["Home", "Signup", "Login", "Profile", "History", "Result/1"];
+const pages = ['Home', 'Signup', 'Login', 'Profile', 'History', 'Result/1'];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const appName = "LEGO DETECTOR"
 
-export function Navbar() {
-  const themeContext = useContext(ThemeContext);
-  if (!themeContext) {
-    console.warn("no theme cont");
-    return null;
-  }
-  const { themeMode, toggleTheme } = themeContext;
+export default function Navbar() {
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
 
   return (
-    <AppBar position="static" className="bg-blue-600 dark:bg-gray-800">
-      <Toolbar className="flex justify-between items-center gap-4">
-        <Typography variant="h6" className="font-bold">
-          MyApp
-        </Typography>
+    <AppBar position="static">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            {appName}
+          </Typography>
 
-        <div className="flex flex-row items-center gap-4">
-          {navList.map((item, index) => (
-            <Link key={index.toString()} href={item === "Home" ? "/" : `/${item.toLowerCase()}`} className="text-white hover:underline h-fit">
-              {item}
-            </Link>
-          ))}
-
-          <IconButton onClick={toggleTheme} color="inherit">
-            {themeMode === "dark" ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
-        </div>
-      </Toolbar>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{ display: { xs: 'block', md: 'none' } }}
+            >
+              {pages.map((page, index) => (
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Typography sx={{ textAlign: 'center' }}>
+                    <Link
+                      href={page === 'Home' ? '/' : `/${page.toLowerCase()}`}
+                    >
+                      {page}
+                    </Link>
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: 'flex', md: 'none' },
+              flexGrow: 1,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            {appName}
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                <Link href={page === 'Home' ? '/' : `/${page.toLowerCase()}`}>
+                  {page}
+                </Link>
+              </Button>
+            ))}
+          </Box>
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" src="./public/images/2.jpg" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography sx={{ textAlign: 'center' }}>
+                    {setting}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        </Toolbar>
+      </Container>
     </AppBar>
   );
 }

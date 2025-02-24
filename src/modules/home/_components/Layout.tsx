@@ -1,13 +1,51 @@
-import { Navbar } from "./Navbar";
+"use client";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+import React, { useContext } from 'react';
+import { Box, Container, Typography, Button } from '@mui/material';
+import { ThemeContext } from './ThemeProvider';
+import Navbar from './Navbar';
+
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const themeContext = useContext(ThemeContext);
+
+  if (!themeContext) {
+    return null;
+  }
+
+  const { toggleTheme, themeMode } = themeContext;
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: 'background.default',
+        color: 'text.primary',
+      }}
+    >
       <Navbar />
-      <main className="flex-1 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">{children}</main>
-      <footer className="text-center py-4 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-        © {new Date().getFullYear()} MyApp. All rights reserved.
-      </footer>
-    </div>
+      <Container component="main" sx={{ flex: 1, padding: 2 }}>
+        {children}
+      </Container>
+      <Box
+        component="footer"
+        sx={{
+          textAlign: 'center',
+          paddingY: 2,
+          bgcolor: 'background.paper',
+          color: 'text.secondary',
+        }}
+      >
+        <Typography variant="body2">
+          © {new Date().getFullYear()} MyApp. All rights reserved.
+        </Typography>
+        <Button onClick={toggleTheme} sx={{ marginTop: 2 }} variant="contained">
+          Toggle Dark Mode
+        </Button>
+      </Box>
+    </Box>
   );
-}
+};
+
+export default Layout;
