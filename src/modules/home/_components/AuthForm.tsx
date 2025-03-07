@@ -2,11 +2,8 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema, signupSchema } from '../_schemas';
+import { signUpSchema, signInSchema } from '../_schemas';
 import { Button, FormControl, FormHelperText, Grid2, TextField, Typography } from '@mui/material';
-
-const URL_LOGIN = '/api/login';
-const URL_SIGNUP = '/api/signup';
 
 interface AuthFormData {
   email: string;
@@ -20,10 +17,10 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
     handleSubmit,
     formState: { errors },
   } = useForm<AuthFormData>({
-    resolver: zodResolver(isSignup ? signupSchema : loginSchema),
+    resolver: zodResolver(isSignup ? signUpSchema: signInSchema),
   });
 
-  const onSubmitFunc = (data: any) => {
+  const onSubmit = (data: AuthFormData) => {
     console.log("Form data :", data);
     // submit process
   };
@@ -39,7 +36,7 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
       <Typography variant="h5" gutterBottom>
         {isSignup ? 'Sign Up' : 'Login'}
       </Typography>
-      <FormControl onSubmit={handleSubmit(onSubmitFunc)}>
+      <FormControl onSubmit={handleSubmit(onSubmit)}>
         <TextField
           margin="normal"
           id="email"

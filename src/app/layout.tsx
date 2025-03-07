@@ -1,6 +1,7 @@
 import "@/app/globals.css"
 import ThemeProvider from "@/modules/home/_components/ThemeProvider";
 import Layout from "@/modules/home/_components/Layout";
+import QueryProvider from "@/shared/components/queryProvider";
 
 export const metadata = {
   title: 'LEGO DETECTOR',
@@ -12,7 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="bg-gray-50 dark:bg-gray-900">
         <ThemeProvider>
-          <Layout>{children}</Layout>
+          <QueryProvider>
+            <Layout>{children}</Layout>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,6 +1,6 @@
 "use client";
 
-import { FileUpload } from "@/modules/home/_components/FileUpload";
+import { FileUpload } from "@/modules/inference/_components/fileUpload";
 
 export default function Home(){
   return (
