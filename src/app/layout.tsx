@@ -2,6 +2,7 @@ import "@/app/globals.css"
 import ThemeProvider from "@/modules/home/_components/ThemeProvider";
 import Layout from "@/modules/home/_components/Layout";
 import QueryProvider from "@/shared/components/queryProvider";
+import AuthProvider from "@/modules/home/_contexts/AuthContext";
 
 export const metadata = {
   title: 'LEGO DETECTOR',
@@ -14,7 +15,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-gray-50 dark:bg-gray-900">
         <ThemeProvider>
           <QueryProvider>
-            <Layout>{children}</Layout>
+              <AuthProvider>
+                <Layout>
+                  {children}
+                </Layout>
+              </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>

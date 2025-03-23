@@ -3,7 +3,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signUpSchema, signInSchema } from '../_schemas';
-import { Button, FormControl, FormHelperText, Grid2, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography, Box } from '@mui/material';
+import { useAuth } from '../_contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 interface AuthFormData {
   email: string;
@@ -12,78 +14,87 @@ interface AuthFormData {
 }
 
 export default function AuthForm({ isSignup }: { isSignup: boolean }) {
+  const { setUser } = useAuth();
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<AuthFormData>({
-    resolver: zodResolver(isSignup ? signUpSchema: signInSchema),
+    resolver: zodResolver(isSignup ? signUpSchema : signInSchema),
   });
 
-  const onSubmit = (data: AuthFormData) => {
-    console.log("Form data :", data);
-    // submit process
+  const onSubmit = async (data: AuthFormData) => {
+    try {
+      const res = await fetch(`${process.env.BACKEND_URL}/${isSignup ? 'sign-up' : 'sign-in'}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        throw new Error('Authentication failed');
+      }
+
+      const result = await res.json();
+      setUser(result.profile);
+
+      router.push('/');
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
-    <Grid2
-      container
-      direction="column"
-      justifyContent="center"
-      alignItems="center"
-      padding="normal"
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3, maxWidth: 400, mx: 'auto' }}
     >
       <Typography variant="h5" gutterBottom>
         {isSignup ? 'Sign Up' : 'Login'}
       </Typography>
-      <FormControl onSubmit={handleSubmit(onSubmit)}>
-        <TextField
-          margin="normal"
-          id="email"
-          aria-describedby='email-text'
-          {...register('email')}
-          label="Email"
-          type="email"
-          variant="outlined"
-          error={!!errors.email}
-          helperText={errors.email?.message}
-          required
-        />
-        <FormHelperText id="email-text">{errors.email?.message}</FormHelperText>
 
+      <TextField
+        id="email"
+        {...register('email')}
+        label="Email"
+        type="email"
+        variant="outlined"
+        error={!!errors.email}
+        helperText={errors.email?.message}
+        required
+      />
+
+      <TextField
+        id="password"
+        {...register('password')}
+        label="Password"
+        type="password"
+        variant="outlined"
+        error={!!errors.password}
+        helperText={errors.password?.message}
+        required
+      />
+
+      {isSignup && (
         <TextField
-          margin="normal"
-          id="password"
-          aria-describedby="password-text"
-          {...register('password')}
-          label="Password"
+          id="confirmPassword"
+          {...register('confirmPassword')}
+          label="Confirm Password"
           type="password"
           variant="outlined"
-          error={!!errors.password}
-          helperText={errors.password?.message}
+          error={!!errors.confirmPassword}
+          helperText={errors.confirmPassword?.message}
           required
         />
-        <FormHelperText id="password-text">{errors.password?.message}</FormHelperText>
+      )}
 
-        {isSignup && (
-          <TextField
-            margin="normal"
-            id="confirmPassword"
-            aria-describedby="confirmPassword-text"
-            {...register('confirmPassword')}
-            label="Confirm password"
-            type="password"
-            variant="outlined"
-            error={!!errors.confirmPassword}
-            helperText={errors.confirmPassword?.message}
-            required
-          />
-        )}
-
-        <Button type="submit" variant="outlined">
-          {isSignup ? 'Sign Up' : 'Login'}
-        </Button>
-      </FormControl>
-    </Grid2>
+      <Button type="submit" variant="contained" color="primary">
+        {isSignup ? 'Sign Up' : 'Login'}
+      </Button>
+    </Box>
   );
 }
