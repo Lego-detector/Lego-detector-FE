@@ -6,3 +6,13 @@
 .md-card {
   @apply max-w-md mx-auto mt-10 p-6 rounded-xl shadow-md bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-300;
 }
+
+a {
+  text-decoration: none !important;
+}
+
+a:visited, a:hover, a:active, a:focus {
+  color: inherit !important;
+  text-decoration: none !important;
+  outline: none !important;
+}
