@@ -5,7 +5,8 @@ import { useState, MouseEvent } from 'react';
 import { AppBar, Button, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography, Tooltip, Avatar } from '@mui/material';
 import { Adb as AdbIcon, Menu as MenuIcon } from '@mui/icons-material';
 
-const pages = ['Home', 'Signup', 'Login', 'Profile', 'History', 'Result/1'];
+const pages = ['Home', 'Profile', 'History', 'Result/1', 'Manageuser'];
+const guestOptions = ['Sign-up', 'Sign-in',];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const appName = "LEGO DETECTOR"
 
