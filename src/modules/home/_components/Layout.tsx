@@ -40,9 +40,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Typography variant="body2">
           © {new Date().getFullYear()} MyApp. All rights reserved.
         </Typography>
-        <Button onClick={toggleTheme} sx={{ marginTop: 2 }} variant="contained">
+        {/* <Button onClick={toggleTheme} sx={{ marginTop: 2 }} variant="contained">
           Toggle Dark Mode
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   );

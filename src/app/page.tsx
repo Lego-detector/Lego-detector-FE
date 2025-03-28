@@ -1,11 +1,5 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { FileUpload } from "@/modules/inference/_components/fileUpload";
-
-export default function Home(){
-  return (
-    <>
-      <FileUpload />
-    </>
-  );
-};
+export default function Home() {
+  redirect("/inference");
+}
