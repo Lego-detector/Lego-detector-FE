@@ -2,6 +2,7 @@ import { Button } from '@mui/material';
 import { EVENT, STORAGE_KEY } from '../_config/config';
 import { CloudUpload } from '@mui/icons-material'
 import { visuallyHidden } from '@mui/utils';
+import { fromBlob, blobToURL } from 'image-resize-compress';
 
 type Props = {
   innerText?: string
@@ -9,23 +10,17 @@ type Props = {
 }
 
 export function FileUpload({ innerText, varaint = 'text' }: Props) {
-  function handleImageChange(event: React.ChangeEvent<HTMLInputElement>){
+  async function handleImageChange(event: React.ChangeEvent<HTMLInputElement>){
     const file = event.target.files?.[0];
     
     if (file) {
       console.log(file.name);
-      
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
+      const resizedImage = await fromBlob(file, 0.8);
+      const base64Image = await blobToURL(resizedImage) as string;
 
-      
-      reader.onload = () => {
-        const base64Image = reader.result as string;
+      localStorage.setItem(STORAGE_KEY.IMAGE, base64Image);
 
-        localStorage.setItem(STORAGE_KEY.IMAGE, base64Image);
-
-        window.dispatchEvent(new Event(EVENT.STORAGE_CHANGE));
-      };
+      window.dispatchEvent(new Event(EVENT.STORAGE_CHANGE));
     }
   };
 

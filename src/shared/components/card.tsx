@@ -1,16 +1,16 @@
-import { Box } from "@mui/material";
+import { Box, BoxProps } from "@mui/material";
 
 type Props = {
     children: React.ReactNode; 
-    height?: string | number;
-    width?: string | number;
-}
+} & BoxProps
 
-export default function Card({ children, height, width }: Props) {
+export default function Card(props: Props) {
     return (
         <Box
+        display="flex"
         justifyContent="center"
         alignItems="center"
+        {...props}
             sx={{
                 border: "1px solid rgba(255, 255, 255, 0.09)", // Softer border
                 borderRadius: "16px",
@@ -20,11 +20,11 @@ export default function Card({ children, height, width }: Props) {
                 boxShadow: "0 8px 32px rgba(0, 0, 0, 0.25)", // Deeper shadow for depth
                 padding: 3, // More padding for a spacious feel
                 color: "#fff", // White text for contrast
-                height: height || "auto",
-                width: width || "auto"
+                height: props.height || "auto",
+                width: props.height || "auto",
             }}
         >
-            {children}
+            {props.children}
         </Box>
     );
 }

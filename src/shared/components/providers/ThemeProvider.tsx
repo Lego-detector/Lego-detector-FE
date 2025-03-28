@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, useEffect, ReactNode, useMemo } from "react";
 import { ThemeProvider as MUIThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 
@@ -13,7 +13,11 @@ export const ThemeContext = createContext<ThemeContextProps | undefined>(undefin
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
-  const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
+  const [themeMode, setThemeMode] = useState<"light" | "dark">(
+    () => (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches) 
+      ? "dark" 
+      : "light"
+  );
 
   useEffect(() => {
     setThemeMode(
@@ -26,17 +30,20 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     setThemeMode((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  const theme = createTheme({
+  const theme = useMemo(() => createTheme({
     palette: {
-      mode: themeMode,
+      mode: themeMode || "light",
+      primary: {
+        main: "#0A2033",
+      },
     },
-  });
+  }), [themeMode]);
 
   if (!mounted) return <div className="bg-gray-50 dark:bg-gray-900 min-h-screen" />;
 
   return (
     <ThemeContext.Provider value={{ themeMode, toggleTheme }}>
-      <MUIThemeProvider theme={theme}>
+      <MUIThemeProvider theme={theme} >
         <CssBaseline />
         <div className={themeMode === "dark" ? "dark" : ""}>{children}</div>
       </MUIThemeProvider>

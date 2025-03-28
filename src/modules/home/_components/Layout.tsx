@@ -2,17 +2,17 @@
 
 import React, { useContext } from 'react';
 import { Box, Container, Typography, Button } from '@mui/material';
-import { ThemeContext } from './ThemeProvider';
+import { ThemeContext } from '@/shared/components/providers/ThemeProvider';
 import Navbar from './Navbar';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const themeContext = useContext(ThemeContext);
 
   if (!themeContext) {
-    return null;
+    throw new Error("ThemeContext is undefined. Ensure ThemeProvider wraps Layout.");
   }
 
-  const { toggleTheme, themeMode } = themeContext;
+  const { toggleTheme } = themeContext;
 
   return (
     <Box

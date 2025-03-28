@@ -2,8 +2,7 @@
 
 import { JSX, useEffect, useState } from "react";
 
-import { Button, Stack } from "@mui/material";
-import { StepTwo, StepOne, StepThree } from "./step";
+import { StepTwo, StepOne } from "./step";
 import { EVENT, STORAGE_KEY } from "./_config/config";
 import { InferenceStepperContext } from "./_hooks";
 
@@ -11,13 +10,11 @@ import { InferenceStepperContext } from "./_hooks";
 const slideStep = new Map<number, JSX.Element>([
   [ 0, <StepOne key='StepOne'/> ],
   [ 1, <StepTwo key='StepTwo'/> ],
-  [ 2, <StepThree key='StepThree'/> ]
 ])
 
 
 export default function InferenceStepper() {
     const [ step, setStep ] = useState<number>(0);
-    const [ sessionId, setSessionId] = useState<string>('');
         
     useEffect(() => {
         const hasImage = localStorage.getItem(STORAGE_KEY.IMAGE);
@@ -38,7 +35,7 @@ export default function InferenceStepper() {
 
     return (
         <>
-            <InferenceStepperContext.Provider value={{ step, setStep, sessionId, setSessionId }}>
+            <InferenceStepperContext.Provider value={{ step, setStep }}>
                 {slideStep.get(step)}
             </InferenceStepperContext.Provider>
         </>

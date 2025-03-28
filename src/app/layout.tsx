@@ -1,6 +1,6 @@
 import "@/app/globals.css"
-import ThemeProvider from "@/modules/home/_components/ThemeProvider";
-import Layout from "@/modules/home/_components/Layout";
+// import ThemeProvider from "@/shared/components/providers/ThemeProvider";
+// import Layout from "@/modules/home/_components/Layout";
 import QueryProvider from "@/shared/components/queryProvider";
 
 export const metadata = {
@@ -10,13 +10,15 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="bg-gray-50 dark:bg-gray-900">
-        <ThemeProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className="bg-gray-50 dark:bg-gray-900" suppressHydrationWarning>
+        {/* <ThemeProvider> */}
           <QueryProvider>
-            <Layout>{children}</Layout>
+            {/* <Layout> */}
+              {children}
+            {/* </Layout> */}
           </QueryProvider>
-        </ThemeProvider>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );
