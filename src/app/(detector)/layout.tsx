@@ -1,8 +1,11 @@
-import InferenceStepper from "@/modules/inference/inferenceStepper";
-import { Stack, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Stack } from "@mui/system";
 
+type Props = {
+    children: React.ReactNode; 
+}
 
-export default function Inference() {
+export default function DetectorLayout({ children }: Props) {
     return (
       <Stack justifyContent="center"  gap={2} paddingBlockStart={5}>
 
@@ -13,7 +16,7 @@ export default function Inference() {
           </Typography>
         </Typography >
 
-        <InferenceStepper />
+        {children}
 
       </Stack>
     );

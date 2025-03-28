@@ -7,5 +7,10 @@ export const EVENT = {
 }
 
 export const DETECTOR_QUERY_KEY = {
-    RESULTS: 'results'
+    RESULTS: 'results',
+    CLASSNAMES: 'classNames'
+}
+
+export const REDIRECT_PATH = {
+    RESULTS: 'results/'
 }

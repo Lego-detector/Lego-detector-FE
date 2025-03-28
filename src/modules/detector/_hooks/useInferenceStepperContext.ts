@@ -4,8 +4,6 @@ import { createContext, useContext } from "react";
 export type InferenceStepperContextType = {
     step: number;
     setStep: (step: number) => void;
-    sessionId: string;
-    setSessionId: (id: string) => void;
 }
 
 export const InferenceStepperContext = createContext<InferenceStepperContextType | undefined>(undefined);
