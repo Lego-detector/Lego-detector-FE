@@ -6,7 +6,7 @@ import { AppBar, Button, Box, Container, IconButton, Menu, MenuItem, Toolbar, Ty
 import { Adb as AdbIcon, Menu as MenuIcon } from '@mui/icons-material';
 import { useAuth } from '../_contexts/AuthContext';
 
-const pages = ['Home', 'Profile', 'History', 'Result/1', 'Manage'];
+const pages = ['Home', 'Profile', 'History', 'Result/1', 'Manageuser'];
 const guestOptions = ['Sign-up', 'Sign-in',];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const appName = "LEGO DETECTOR"
