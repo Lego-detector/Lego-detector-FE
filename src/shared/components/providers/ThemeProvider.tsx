@@ -30,14 +30,24 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     setThemeMode((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  const theme = useMemo(() => createTheme({
-    palette: {
-      mode: themeMode || "light",
-      primary: {
-        main: "#0A2033",
-      },
-    },
-  }), [themeMode]);
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: themeMode,
+          ...(themeMode === 'dark'
+            ? {
+                primary: { main: '#1e3a8a' },
+                background: { default: '#0f172a', paper: '#1e293b' },
+                text: { primary: '#e0e7ff', secondary: '#a5b4fc' },
+              }
+            : {
+                primary: { main: '#1976d2' },
+              }),
+        },
+      }),
+    [themeMode],
+  );
 
   if (!mounted) return <div className="bg-gray-50 dark:bg-gray-900 min-h-screen" />;
 

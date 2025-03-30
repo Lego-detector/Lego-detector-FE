@@ -6,7 +6,7 @@ import { AppBar, Button, Box, Container, IconButton, Menu, MenuItem, Toolbar, Ty
 import { Adb as AdbIcon, Menu as MenuIcon } from '@mui/icons-material';
 import { useAuth } from '../_contexts/AuthContext';
 
-const pages = ['Home', 'Profile', 'History', 'Result/1', 'Manageuser'];
+const pages = ['History', 'Result/1', 'Manageuser'];
 const guestOptions = ['Sign-up', 'Sign-in',];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const appName = "LEGO DETECTOR"
@@ -81,10 +81,10 @@ export default function Navbar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
-              {pages.map((page, index) => (
+              {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography sx={{ textAlign: 'center' }}>
-                    <Link 
+                    <Link
                       href={page === 'Home' ? '/' : `/${page.toLowerCase()}`}
                     >
                       {page}
@@ -115,69 +115,90 @@ export default function Navbar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Link key={page} href={page === 'Home' ? '/' : `/${page.toLowerCase()}`}>
+              <Link
+                key={page}
+                href={page === 'Home' ? '/' : `/${page.toLowerCase()}`}
+              >
                 <Button
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  sx={{
+                    my: 2,
+                    color: 'white',
+                    display: 'block',
+                    transition: '0.3s',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    },
+                  }}
                 >
                   {page}
                 </Button>
               </Link>
             ))}
           </Box>
-          {
-            user &&
+          {user && (
             <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src=''/><Typography sx={{ mx:2 }}>{user.fname}</Typography>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="" />
+                  <Typography sx={{ mx: 2 }}>{user.fname}</Typography>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
               >
-              {settings.map((setting) => (
-                <MenuItem key={setting}  onClick={() => {
-                  if (setting === "Logout") {
-                    logout();
-                  } else {
-                    handleCloseUserMenu();
-                  }
-                }}>
-                  <Typography sx={{ textAlign: 'center' }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          }
-          {
-            !user &&
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting}
+                    onClick={() => {
+                      if (setting === 'Logout') {
+                        logout();
+                      } else {
+                        handleCloseUserMenu();
+                      }
+                    }}
+                  >
+                    <Typography sx={{ textAlign: 'center' }}>
+                      {setting}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
+          {!user &&
             guestOptions.map((option) => (
               <Link key={option} href={option.toLowerCase()}>
                 <Button
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, mx: 1, color: 'white', display: 'block' }}
+                  sx={{
+                    my: 2,
+                    mx: 1,
+                    color: 'white',
+                    display: 'block',
+                    transition: '0.3s',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    },
+                  }}
                 >
                   {option}
                 </Button>
               </Link>
-            ))
-          }
+            ))}
         </Toolbar>
       </Container>
     </AppBar>
