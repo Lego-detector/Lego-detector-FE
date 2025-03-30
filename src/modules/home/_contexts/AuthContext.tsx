@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { removeCredentials } from '@/shared/utils/cookie';
 
 interface UserProfile {
   fname: string;
@@ -21,29 +22,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/profile`, {
-          credentials: 'include',
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch session:', error);
-      }
-    };
-
-    fetchSession();
-  }, []);
+  useEffect(() => {}, []);
 
   const logout = async () => {
-    // await fetch(`${process.env.BACKEND_URL}/sign-up`, {
-    //   method: 'POST',
-    //   credentials: 'include',
-    // });
+    await fetch(`${process.env.BACKEND_URL}/revoke`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+    removeCredentials();
     setUser(null);
   };
 

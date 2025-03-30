@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Button, TablePagination, Typography, Box, IconButton } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, TablePagination, Typography, Box, IconButton } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { tempUsers } from '@/modules/home/_constants/usersRole';
+import axiosInstance from '@/shared/utils/axios';
+import { getCredentials } from '@/shared/utils/cookie';
 
-const roles = ['Admin', 'L1', 'L2'];
+const roles = ['Admin', 'L1', 'L2', 'L3', 'L4'];
 
 export default function UserRoleManagement() {
   const [users, setUsers] = useState(tempUsers);
@@ -43,6 +45,30 @@ export default function UserRoleManagement() {
     setPage(0);
   };
 
+  const getUsers = async () => {
+    const axiosRes = await axiosInstance(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/user-dashboard`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getCredentials().accessToken}`,
+      },
+    },)
+    return axiosRes.data.data.data;
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getUsers();
+        console.log(res);
+        setUsers(res);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [])
+
   return (
     <>
       <Typography variant="h4" gutterBottom>
@@ -62,14 +88,14 @@ export default function UserRoleManagement() {
               {Array.from({ length: rowsPerPage }).map((_, index) => {
                 const user = users[page * rowsPerPage + index];
                 return user ? (
-                  <TableRow key={user.id} sx={{ height: 75 }}>
-                    <TableCell sx={{ pl: 3, width: '10%' }}>{user.id}</TableCell>
-                    <TableCell sx={{ width: '40%' }}>{`${user.firstName} ${user.lastName}`}</TableCell>
+                  <TableRow key={user._id} sx={{ height: 75 }}>
+                    <TableCell sx={{ pl: 3, width: '10%' }}>{user._id}</TableCell>
+                    <TableCell sx={{ width: '40%' }}>{`${user.fname} ${user.lname}`}</TableCell>
                     <TableCell sx={{ width: '20%' }}>
                       <Box display="flex" alignItems="center" height="100%">
                         <Select
-                          value={editedRoles[user.id] ?? user.role}
-                          onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                          value={editedRoles[user._id] ?? user.role}
+                          onChange={(e) => handleRoleChange(user._id, e.target.value)}
                           sx={{ height: 30, fontSize: 14, flexGrow: 1 }}
                           >
                           {roles.map((role) => (
@@ -80,8 +106,8 @@ export default function UserRoleManagement() {
                         </Select>
                         <IconButton
                           color="primary"
-                          disabled={!editedRoles[user.id]}
-                          onClick={() => handleConfirm(user.id)}
+                          disabled={!editedRoles[user._id]}
+                          onClick={() => handleConfirm(user._id)}
                           sx={{ ml: 1 }}
                           >
                           <CheckCircleIcon />

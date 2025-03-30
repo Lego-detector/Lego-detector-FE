@@ -7,55 +7,51 @@ import React, { useState } from 'react';
 import { useGetInferenceResults } from './_hooks';
 import { BoundingBoxCanvas } from './_components';
 import { useCountUp } from 'use-count-up';
-import { useParams } from 'next/navigation';
 import { ClassNames, InferenceResults } from './types';
 import { useGetClassNames } from './_hooks/useGetClassNames';
 
 import { Button, Checkbox, Chip, Grid2, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 
+type ResultsViewerProps = {
+  sessionId: string;
+};
 
-export function ResultsViewer() {
-    const { id } = useParams<{ id: string; }>();
-    const { isSuccess: isfetchClassNameSucess, data: classList } = useGetClassNames();
-    const { isSuccess: isfetchResultsSuccess, data: inferenceResults } = useGetInferenceResults({ sessionId: id });
-    const { value } = useCountUp({
-        isCounting: true,
-        duration: 3,
-        easing: 'easeOutCubic',
-        start: 0,
-        end: 9750,
-    });
-    
-    return (
-        <Grid2 
-        alignItems='center' 
-        justifyContent='center'
-        height={580}
+export function ResultsViewer({ sessionId }: ResultsViewerProps) {
+  const { isSuccess: isfetchClassNameSucess, data: classList } =
+    useGetClassNames();
+  const { isSuccess: isfetchResultsSuccess, data: inferenceResults } =
+    useGetInferenceResults({ sessionId: sessionId });
+  const { value } = useCountUp({
+    isCounting: true,
+    duration: 3,
+    easing: 'easeOutCubic',
+    start: 0,
+    end: 9750,
+  });
+
+  return (
+    <Grid2 alignItems="center" justifyContent="center" height={580}>
+      {isfetchResultsSuccess && isfetchClassNameSucess ? (
+        <Results results={inferenceResults} classList={classList} />
+      ) : (
+        <Card
+          display="block"
+          flexDirection="column"
+          gap={2}
+          width={775}
+          height={'40%'}
+          justifyContent="space-between"
         >
-            {
-                (isfetchResultsSuccess && isfetchClassNameSucess) 
-                ? 
-                <Results results={inferenceResults} classList={classList}/>
-                : 
-                <Card 
-                    display='block' 
-                    flexDirection='column' 
-                    gap={2}
-                    width={775}
-                    height={'40%'}
-                    justifyContent='space-between'
-                >
-                <LinearProgress 
-                    determinate
-                    variant='solid' 
-                    size='lg'
-                    value={Number(value!)/100}
-                    
-                />
-            </Card>
-            }
-        </Grid2>
-    );
+          <LinearProgress
+            determinate
+            variant="solid"
+            size="lg"
+            value={Number(value!) / 100}
+          />
+        </Card>
+      )}
+    </Grid2>
+  );
 }
 
 type ResultsProps = {
