@@ -1,14 +1,20 @@
 import axios from 'axios';
-
-// ----------------------------------------------------------------------
-const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2N2IzOGFkOTRhMTdlMzc1Y2YxM2FjYjIiLCJpYXQiOjE3NDMxNDQ4OTksImV4cCI6MTc0MzIzMTI5OX0.amP_8CP7mMRRvAXX-xfc5Y4MhPx6VBfylW0gOwsvZBc';
+import { getCredentials } from './cookie';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_UPLOAD_URL,
-  headers: {
-    Authorization: `Bearer ${mockToken}`,
-  },
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
 });
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = getCredentials().accessToken;
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 axiosInstance.interceptors.response.use(
   (response) => response,
