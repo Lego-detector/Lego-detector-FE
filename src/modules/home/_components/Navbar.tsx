@@ -17,6 +17,7 @@ import { Adb as AdbIcon, Menu as MenuIcon } from '@mui/icons-material';
 import { useAuth } from '../_contexts/AuthContext';
 import axiosInstance from '@/shared/utils/axios';
 import { useRouter } from 'next/navigation';
+import { useQuota } from '../_contexts/QuotaContext';
 
 const pages = ['Quota', 'Profile', 'History', 'Logout'];
 const adminOptions = ['ManageUser'];
@@ -26,7 +27,7 @@ const appName = 'LEGO DETECTOR';
 export default function Navbar() {
   const router = useRouter();
   const { user, logout } = useAuth();
-  const [quota, setQuota] = useState(0);
+  const { quota, setQuota } = useQuota();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
@@ -54,10 +55,8 @@ export default function Navbar() {
   }
 
   useEffect(() => {
-    if (user && !quota) {
-      console.log(getUserQuota());
-    }
-  }, [user, quota]);
+    getUserQuota();
+  }, [quota]);
 
   return (
     <AppBar position="static" className="AppBar">
@@ -71,7 +70,7 @@ export default function Navbar() {
             href="/inference"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: 'none', sm: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
@@ -81,67 +80,8 @@ export default function Navbar() {
           >
             {appName}
           </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>
-                    <Link
-                      href={page === 'Home' ? '/' : `/${page.toLowerCase()}`}
-                    >
-                      {page}
-                    </Link>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            {appName}
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' } }}>
             {user?.role == 'ADMIN' &&
               adminOptions.map((page) => (
                 <Link key={page} href={page.toLowerCase()}>
@@ -170,18 +110,43 @@ export default function Navbar() {
                   handleCloseNavMenu();
                   if (page === 'Logout') {
                     logout();
-                  } else if (page !== 'Profile') {
-                    router.replace(page.toLowerCase());
+                  } else if (page !== 'Profile' && page !== 'Quota') {
+                    router.push('/' + page.toLowerCase());
                   }
+                }}
+                sx={{
+                  borderRadius: 1,
+                  pointerEvents:
+                    page === 'Profile' || page === 'Quota' ? 'none' : 'auto',
+                  backgroundColor:
+                    page === 'Profile' || page === 'Quota'
+                      ? 'transparent'
+                      : 'inherit',
+                  transition: '0.3s',
+                  '&:hover': {
+                    backgroundColor:
+                      page === 'Profile' || page === 'Quota'
+                        ? 'transparent'
+                        : 'rgba(255, 255, 255, 0.2)',
+                  },
                 }}
               >
                 <Typography sx={{ textAlign: 'center' }}>
-                  {page === 'Profile'
-                    ? user.fname
-                    : page === 'Quota'
-                      ? 'Quota: ' + quota
-                      : // <Link href={page === 'Logout' ? '': page.toLowerCase()}></Link>
-                        page}
+                  {page === 'Profile' ? (
+                    <>
+                      User:{' '}
+                      <span style={{ color: 'orange' }}>{user.fname}</span>
+                    </>
+                  ) : page === 'Quota' ? (
+                    <>
+                      Quota:{' '}
+                      <span style={{ color: 'orange' }}>
+                        {user.role === 'ADMIN' ? 'Infinity' : quota}
+                      </span>
+                    </>
+                  ) : (
+                    page
+                  )}
                 </Typography>
               </MenuItem>
             ))}
