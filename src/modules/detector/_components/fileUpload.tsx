@@ -36,9 +36,9 @@ export function FileUpload({ innerText, varaint = 'text' }: Props) {
         sx={{
           color: 'white',
           borderColor: 'white',
-          backgroundColor: '#0C3353',
+          backgroundColor: '#257DF0',
           '&:hover': {
-            backgroundColor: '#0A2033',
+            backgroundColor: '#2A4053',
             borderColor: 'gray',
           },
         }}

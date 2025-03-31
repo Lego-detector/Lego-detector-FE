@@ -7,7 +7,9 @@ import { Button, TextField, Typography, Box } from '@mui/material';
 import { useAuth } from '../_contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import axiosInstance from '@/shared/utils/axios';
-import { getUserProfile, setCredentials, setUserProfile } from '@/shared/utils/cookie';
+import { setCredentials, setUserProfile } from '@/shared/utils/cookie';
+import AlertCard from './AlertCard';
+import { useState } from 'react';
 
 interface AuthFormData {
   fname?: string;
@@ -20,6 +22,8 @@ interface AuthFormData {
 export default function AuthForm({ isSignup }: { isSignup: boolean }) {
   const { setUser } = useAuth();
   const router = useRouter();
+  const [ openAlert, setOpenAlert ] = useState<boolean>(false);
+  const [ alertMessage, setAlertMessage ] = useState<string | null>("");
 
   const {
     register,
@@ -28,6 +32,14 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
   } = useForm<AuthFormData>({
     resolver: zodResolver(isSignup ? signUpSchema : signInSchema),
   });
+
+  const handleClose = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') return;
+    setOpenAlert(false);
+  };
 
   const onSubmit = async (data: AuthFormData) => {
     try {
@@ -53,7 +65,7 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
       }
 
       const result = await res.data.data;
-      // console.log(result.profile);
+      result.fname = data.fname;
 
       setCredentials(
         result.credentials.accessToken,
@@ -62,16 +74,17 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
       setUserProfile(result.profile);
       setUser(result.profile);
 
-      console.log(getUserProfile);
-
-
       router.push('/');
     } catch (error) {
+      const errorMessage = (error as Error).message || String(error);
+      setAlertMessage(errorMessage);
+      setOpenAlert(true);
       console.error('Error:', error);
     }
   };
 
   return (
+    <>
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
@@ -83,7 +96,7 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
         maxWidth: 400,
         mx: 'auto',
       }}
-    >
+      >
       <Typography variant="h5" gutterBottom>
         {isSignup ? 'Sign Up' : 'Login'}
       </Typography>
@@ -98,7 +111,7 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
             error={!!errors.fname}
             helperText={errors.fname?.message}
             required
-          />
+            />
           <TextField
             id="lname"
             {...register('lname')}
@@ -107,7 +120,7 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
             error={!!errors.lname}
             helperText={errors.lname?.message}
             required
-          />
+            />
         </>
       )}
 
@@ -120,7 +133,7 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
         error={!!errors.email}
         helperText={errors.email?.message}
         required
-      />
+        />
 
       <TextField
         id="password"
@@ -131,18 +144,18 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
         error={!!errors.password}
         helperText={errors.password?.message}
         required
-      />
+        />
 
       {isSignup && (
         <TextField
-          id="confirmPassword"
-          {...register('confirmPassword')}
-          label="Confirm Password"
-          type="password"
-          variant="outlined"
-          error={!!errors.confirmPassword}
-          helperText={errors.confirmPassword?.message}
-          required
+        id="confirmPassword"
+        {...register('confirmPassword')}
+        label="Confirm Password"
+        type="password"
+        variant="outlined"
+        error={!!errors.confirmPassword}
+        helperText={errors.confirmPassword?.message}
+        required
         />
       )}
 
@@ -150,5 +163,7 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
         {isSignup ? 'Sign Up' : 'Login'}
       </Button>
     </Box>
+    <AlertCard message={alertMessage} open={openAlert} handleClose={handleClose} severity={'error'}/>
+    </>
   );
 }

@@ -12,5 +12,5 @@ export const DETECTOR_QUERY_KEY = {
 }
 
 export const REDIRECT_PATH = {
-    RESULTS: 'results/'
+    RESULTS: '/results/'
 }
