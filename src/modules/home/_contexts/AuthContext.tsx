@@ -1,15 +1,9 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { removeCredentials } from '@/shared/utils/cookie';
-
-interface UserProfile {
-  fname: string;
-  lname: string;
-  email: string;
-  profileImageUrl: string;
-  role: string;
-}
+import { removeCredentials, getUserProfile, removeUserProfile } from '@/shared/utils/cookie';
+import { UserProfile } from '../_types/user.type';
+import { redirect } from 'next/navigation';
 
 interface AuthContextType {
   user: UserProfile | null;
@@ -22,15 +16,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setUser(getUserProfile());
+  }, []);
 
   const logout = async () => {
     await fetch(`${process.env.BACKEND_URL}/revoke`, {
       method: 'POST',
       credentials: 'include',
     });
+
     removeCredentials();
+    removeUserProfile();
     setUser(null);
+    redirect("/");
   };
 
   return (

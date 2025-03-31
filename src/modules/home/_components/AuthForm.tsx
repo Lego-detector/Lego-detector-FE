@@ -7,7 +7,7 @@ import { Button, TextField, Typography, Box } from '@mui/material';
 import { useAuth } from '../_contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import axiosInstance from '@/shared/utils/axios';
-import { getCredentials, setCredentials } from '@/shared/utils/cookie';
+import { getUserProfile, setCredentials, setUserProfile } from '@/shared/utils/cookie';
 
 interface AuthFormData {
   fname?: string;
@@ -53,13 +53,17 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
       }
 
       const result = await res.data.data;
+      // console.log(result.profile);
+
       setCredentials(
         result.credentials.accessToken,
         result.credentials.refreshToken,
       );
+      setUserProfile(result.profile);
       setUser(result.profile);
 
-      console.log(getCredentials());
+      console.log(getUserProfile);
+
 
       router.push('/');
     } catch (error) {

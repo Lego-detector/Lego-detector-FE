@@ -37,9 +37,9 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
           mode: themeMode,
           ...(themeMode === 'dark'
             ? {
-                primary: { main: '#1e3a8a' },
-                background: { default: '#0f172a', paper: '#1e293b' },
-                text: { primary: '#e0e7ff', secondary: '#a5b4fc' },
+                primary: { main: '#257DF0' },
+                background: { default: '#0A2033', paper: '#0C3353' },
+                text: { primary: '#f0f7ff', secondary: '#c5e4fc' },
               }
             : {
                 primary: { main: '#1976d2' },
