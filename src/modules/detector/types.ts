@@ -19,12 +19,12 @@ type History = {
 
 export type InferenceResults = {
     summary: Record<number, number>
-    history: History
-}
+} & History
 
 
 export type ClassNames = {
     classId: number
     className: string
     classLabel: string
+    color: string
 }

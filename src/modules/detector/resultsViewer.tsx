@@ -1,6 +1,6 @@
 'use client'
 
-import LinearProgress from '@mui/joy/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 import Card from '@/shared/components/card';
 
 import React, { useState } from 'react';
@@ -41,12 +41,13 @@ export function ResultsViewer({ sessionId }: ResultsViewerProps) {
           width={775}
           height={'40%'}
           justifyContent="space-between"
+          margin={'auto'}
         >
           <LinearProgress
-            determinate
-            variant="solid"
-            size="lg"
+            variant="determinate"
             value={Number(value!) / 100}
+            sx={{ width: '100%' }}
+            color="primary"
           />
         </Card>
       )}
@@ -95,85 +96,94 @@ function Results({ results, classList }: ResultsProps) {
       };
 
     return (
-        <Grid2 container gap={8} height={520} justifyContent='center'>
-            <Grid2 size={7} height={520}>
-                <Card 
-                    display='flex'
-                    height='100%'
-                    gap={2}
-                >
-                    <BoundingBoxCanvas
-                        imageUrl={'http://localhost:9000/lego-detector/' + results.history.imageUrl}
-                        results={results.history.results ?? []}
-                        all={checkedBox.toggleAll}
-                        checked={checkedBox.checked}
-                    />
-                </Card>
-            </Grid2>
-
-            <Grid2 size={2} height={520}>
-                <Card
-                    width={1}
-                    justifyContent='start'
-                    flexDirection='column'
-                    height='100%'
-                >
-                    <Typography variant='overline' color='textPrimary'>
-                        Appeared Objects
-                    </Typography>
-                    <Button onClick={handleToggleAll}>toggle All</Button>
-                    { <List 
-                        sx={{ 
-                            height: '100%', 
-                            width: '100%', 
-                            // maxWidth: 360, 
-                            overflow: 'auto',
-                            position: 'relative',
-                            bgcolor: 'background.paper' 
-                        }}
-                    >
-                        {classList.map(
-                            (label: ClassNames, index: number) => {
-                                if (!results.summary[label.classId]) {
-                                    return null;
-                                }
-
-                                const labelId = `checkbox-list-label-${label.classId}-no-${index}`;
-
-                                return (
-                                <ListItem
-                                    key={labelId}
-                                    disablePadding
-                                >
-                                    <ListItemButton role={undefined} onClick={handleCheck(label.classId)} dense>
-                                    <ListItemIcon>
-                                        <Checkbox
-                                            edge='start'
-                                            checked={
-                                                checkedBox.toggleAll || checkedBox.checked.has(label.classId)
-                                            }
-                                            tabIndex={-1}
-                                            disableRipple
-                                        />
-                                    </ListItemIcon>
-                                    <Grid2 container justifyContent="space-between" alignItems="center" width={1}>
-                                        <Grid2 size={8}>
-                                            <ListItemText 
-                                                id={labelId} 
-                                                secondary={`${label.className}`} 
-                                            />
-                                        </Grid2>
-                                        <Chip variant="outlined" color="primary" size="small" label={`${results.summary[label.classId] ?? 0}`} />
-                                    </Grid2>
-                                    </ListItemButton>
-                                </ListItem>
-                            );
-                        })}
-                        </List>}
-                </Card>
-            </Grid2>
-
+      <Grid2 container gap={8} height={520} justifyContent="center">
+        <Grid2 size={7} height={520}>
+          <Card display="flex" height="100%" gap={2}>
+            <BoundingBoxCanvas
+              imageUrl={results.imageUrl}
+              results={results.results ?? []}
+              all={checkedBox.toggleAll}
+              checked={checkedBox.checked}
+              classList={classList}
+            />
+          </Card>
         </Grid2>
+
+        <Grid2 size={3} height={520}>
+          <Card
+            width={1}
+            justifyContent="start"
+            flexDirection="column"
+            height="100%"
+          >
+            <Typography variant="overline" color="textPrimary">
+              Appeared Objects
+            </Typography>
+            <Button onClick={handleToggleAll}>toggle All</Button>
+            {
+              <List
+                sx={{
+                  height: '100%',
+                  width: '100%',
+                  // maxWidth: 360,
+                  overflow: 'auto',
+                  position: 'relative',
+                  bgcolor: 'background.paper',
+                }}
+              >
+                {classList.map((label: ClassNames, index: number) => {
+                  if (!results.summary[label.classId]) {
+                    return null;
+                  }
+
+                  const labelId = `checkbox-list-label-${label.classId}-no-${index}`;
+
+                  return (
+                    <ListItem key={labelId} disablePadding>
+                      <ListItemButton
+                        role={undefined}
+                        onClick={handleCheck(label.classId)}
+                        dense
+                      >
+                        <ListItemIcon>
+                          <Checkbox
+                            edge="start"
+                            checked={
+                              checkedBox.toggleAll ||
+                              checkedBox.checked.has(label.classId)
+                            }
+                            tabIndex={-1}
+                            disableRipple
+                          />
+                        </ListItemIcon>
+                        <Grid2
+                          container
+                          justifyContent="space-between"
+                          alignItems="center"
+                          width={1}
+                        >
+                          <Grid2 size={8}>
+                            <ListItemText
+                              id={labelId}
+                              secondary={`${label.className}`}
+                            />
+                          </Grid2>
+                          <Chip
+                            variant="filled"
+                            color="primary"
+                            size="small"
+                            label={`${results.summary[label.classId] ?? 0}`}
+                          />
+                        </Grid2>
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            }
+          </Card>
+        </Grid2>
+      </Grid2>
     );
 }
 

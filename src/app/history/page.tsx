@@ -5,6 +5,7 @@ import { Grid2, Typography } from '@mui/material';
 import axiosInstance from '@/shared/utils/axios';
 import { getCredentials } from '@/shared/utils/cookie';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 type imageData = {
   expireIndex: string,
@@ -46,16 +47,18 @@ export default function History() {
 
   return (
     <>
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" gutterBottom>
         History
       </Typography>
       <Grid2 container alignItems="center" spacing={2}>
         {images.map((image) => (
           <Grid2 key={image._id}>
-            <ActionCard
-              name={image.expireIndex}
-              imageUrl={`${process.env.NEXT_PUBLIC_MINIO_URL + image.imageUrl}`}
-            ></ActionCard>
+            <Link href={"results/" + image._id}>
+              <ActionCard
+                name={image.expireIndex}
+                imageUrl={image.imageUrl}
+              ></ActionCard>
+            </Link>
           </Grid2>
         ))}
       </Grid2>
