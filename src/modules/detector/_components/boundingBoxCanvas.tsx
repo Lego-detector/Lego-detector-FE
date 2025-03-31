@@ -15,7 +15,8 @@ type Props = {
 };
 
 // Max height 480 px
-const maxBboxHeight = 480
+const maxBboxHeight = 520
+const maxWidth = 680
 
 export function BoundingBoxCanvas({
   imageUrl,
@@ -33,7 +34,9 @@ export function BoundingBoxCanvas({
     if (image) {
       const width = image.width;
       const height = image.height;
-      const scale = maxBboxHeight / Math.max(width, height);
+      const scaleY = maxBboxHeight / height;
+      const scaleX = maxWidth / width;
+      const scale = width > height ? scaleX: scaleY;
 
       setImageSize(() => {
         return {
