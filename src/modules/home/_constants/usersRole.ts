@@ -1,25 +1,25 @@
 export type User = {
-    id: string;
-    firstName: string;
-    lastName: string;
+    _id: string;
+    fname: string;
+    lname: string;
     role: string;
 };
 
 export const tempUsers: User[] = [
-  { id: "1605", firstName: 'John', lastName: 'Doe', role: 'L1' },
-  { id: "2591", firstName: 'Jane', lastName: 'Smith', role: 'L2' },
-  { id: "3437", firstName: 'Michael', lastName: 'Johnson', role: 'Admin' },
-  { id: "4390", firstName: 'Emily', lastName: 'Brown', role: 'L1' },
-  { id: "1883", firstName: 'John', lastName: 'Doe', role: 'L1' },
-  { id: "2934", firstName: 'Jane', lastName: 'Smith', role: 'L2' },
-  { id: "3243", firstName: 'Michael', lastName: 'Johnson', role: 'Admin' },
-  { id: "4773", firstName: 'Emily', lastName: 'Brown', role: 'L1' },
-  { id: "1808", firstName: 'John', lastName: 'Doe', role: 'L1' },
-  { id: "2399", firstName: 'Jane', lastName: 'Smith', role: 'L2' },
-  { id: "3372", firstName: 'Michael', lastName: 'Johnson', role: 'Admin' },
-  { id: "4249", firstName: 'Emily', lastName: 'Brown', role: 'L1' },
-  { id: "1561", firstName: 'John', lastName: 'Doe', role: 'L1' },
-  { id: "2582", firstName: 'Jane', lastName: 'Smith', role: 'L2' },
-  { id: "3396", firstName: 'Michael', lastName: 'Johnson', role: 'Admin' },
-  { id: "4705", firstName: 'Emily', lastName: 'Brown', role: 'L1' },
+  { _id: "1605", fname: 'John', lname: 'Doe', role: 'L1' },
+  { _id: "2591", fname: 'Jane', lname: 'Smith', role: 'L2' },
+  { _id: "3437", fname: 'Michael', lname: 'Johnson', role: 'Admin' },
+  { _id: "4390", fname: 'Emily', lname: 'Brown', role: 'L1' },
+  { _id: "1883", fname: 'John', lname: 'Doe', role: 'L1' },
+  { _id: "2934", fname: 'Jane', lname: 'Smith', role: 'L2' },
+  { _id: "3243", fname: 'Michael', lname: 'Johnson', role: 'Admin' },
+  { _id: "4773", fname: 'Emily', lname: 'Brown', role: 'L1' },
+  { _id: "1808", fname: 'John', lname: 'Doe', role: 'L1' },
+  { _id: "2399", fname: 'Jane', lname: 'Smith', role: 'L2' },
+  { _id: "3372", fname: 'Michael', lname: 'Johnson', role: 'Admin' },
+  { _id: "4249", fname: 'Emily', lname: 'Brown', role: 'L1' },
+  { _id: "1561", fname: 'John', lname: 'Doe', role: 'L1' },
+  { _id: "2582", fname: 'Jane', lname: 'Smith', role: 'L2' },
+  { _id: "3396", fname: 'Michael', lname: 'Johnson', role: 'Admin' },
+  { _id: "4705", fname: 'Emily', lname: 'Brown', role: 'L1' },
 ];

@@ -6,11 +6,15 @@ import { signUpSchema, signInSchema } from '../_schemas';
 import { Button, TextField, Typography, Box } from '@mui/material';
 import { useAuth } from '../_contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import axiosInstance from '@/shared/utils/axios';
+import { getUserProfile, setCredentials, setUserProfile } from '@/shared/utils/cookie';
 
 interface AuthFormData {
+  fname?: string;
+  lname?: string;
   email: string;
   password: string;
-  confirmPassword?: string;
+  confirmPassword?: string
 }
 
 export default function AuthForm({ isSignup }: { isSignup: boolean }) {
@@ -27,19 +31,39 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
 
   const onSubmit = async (data: AuthFormData) => {
     try {
-      const res = await fetch(`${process.env.BACKEND_URL}/${isSignup ? 'sign-up' : 'sign-in'}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-        credentials: 'include',
-      });
+      const endpoint = isSignup ? 'sign-up' : 'sign-in';;
+      const payload = isSignup
+        ? {
+            ...data,
+            confirmPassword: undefined,
+          }
+        : data;
 
-      if (!res.ok) {
+      const res = await axiosInstance(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/${endpoint}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          data: JSON.stringify(payload),
+        },
+      );
+
+      if (!res.data) {
         throw new Error('Authentication failed');
       }
 
-      const result = await res.json();
+      const result = await res.data.data;
+      // console.log(result.profile);
+
+      setCredentials(
+        result.credentials.accessToken,
+        result.credentials.refreshToken,
+      );
+      setUserProfile(result.profile);
       setUser(result.profile);
+
+      console.log(getUserProfile);
+
 
       router.push('/');
     } catch (error) {
@@ -51,11 +75,41 @@ export default function AuthForm({ isSignup }: { isSignup: boolean }) {
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3, maxWidth: 400, mx: 'auto' }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        p: 3,
+        maxWidth: 400,
+        mx: 'auto',
+      }}
     >
       <Typography variant="h5" gutterBottom>
         {isSignup ? 'Sign Up' : 'Login'}
       </Typography>
+
+      {isSignup && (
+        <>
+          <TextField
+            id="fname"
+            {...register('fname')}
+            label="First Name"
+            variant="outlined"
+            error={!!errors.fname}
+            helperText={errors.fname?.message}
+            required
+          />
+          <TextField
+            id="lname"
+            {...register('lname')}
+            label="Last Name"
+            variant="outlined"
+            error={!!errors.lname}
+            helperText={errors.lname?.message}
+            required
+          />
+        </>
+      )}
 
       <TextField
         id="email"

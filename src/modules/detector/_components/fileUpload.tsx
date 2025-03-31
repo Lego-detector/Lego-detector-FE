@@ -33,6 +33,15 @@ export function FileUpload({ innerText, varaint = 'text' }: Props) {
         variant={varaint}
         tabIndex={-1}
         startIcon={<CloudUpload />}
+        sx={{
+          color: 'white',
+          borderColor: 'white',
+          backgroundColor: '#0C3353',
+          '&:hover': {
+            backgroundColor: '#0A2033',
+            borderColor: 'gray',
+          },
+        }}
       >
         {innerText}
 
@@ -41,7 +50,7 @@ export function FileUpload({ innerText, varaint = 'text' }: Props) {
           accept="image/*"
           style={visuallyHidden}
           onChange={handleImageChange}
-          className="mb-4 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-300 dark:file:bg-gray-700 dark:file:text-gray-300 dark:hover:file:bg-gray-800"
+          className="mb-4 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-300 dark:file:bg-gray-700 dark:file:text-gray-300 dark:hover:file:bg-gray-800"
         />
       </Button>
     </div>
