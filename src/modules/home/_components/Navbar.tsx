@@ -18,6 +18,7 @@ import { useAuth } from '../_contexts/AuthContext';
 import axiosInstance from '@/shared/utils/axios';
 import { useRouter } from 'next/navigation';
 import { useQuota } from '../_contexts/QuotaContext';
+import { getCredentials } from '@/shared/utils/cookie';
 
 const pages = ['Quota', 'Profile', 'History', 'Logout'];
 const adminOptions = ['ManageUser'];
@@ -55,7 +56,9 @@ export default function Navbar() {
   }
 
   useEffect(() => {
-    getUserQuota();
+    if (!!getCredentials().accessToken){
+      getUserQuota();
+    }
   }, [quota]);
 
   return (
