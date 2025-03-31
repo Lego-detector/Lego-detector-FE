@@ -9,13 +9,14 @@ import { formatDate } from '@/shared/utils/date';
 import Link from 'next/link';
 
 type imageData = {
-  expireIndex: string,
-  imageUrl: string,
-  ownerId: string,
-  result: [],
-  status: string,
-  _id: string
-}
+  expireIndex: string;
+  imageUrl: string;
+  ownerId: string;
+  result: [];
+  status: string;
+  _id: string;
+  createdAt?: string;
+};
 
 export default function History() {
   const [images, setImages] = useState<imageData[]>([]);
@@ -33,7 +34,7 @@ export default function History() {
     );
     return axiosRes.data.data;
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,12 +52,17 @@ export default function History() {
       <Typography variant="h4" gutterBottom>
         History
       </Typography>
-      <Grid2 container alignItems="center" spacing={2}>
+      <Grid2 container gap={3} justifyContent="center">
         {images.map((image) => (
-          <Grid2 key={image._id} sx={{ width: 220, height: 140 }}>
+          <Grid2 key={image._id} size={2}>
             <Link href={'results/' + image._id}>
               <ActionCard
-                name={"Expire date: " + formatDate(image.expireIndex)}
+                name={
+                  'Create date: ' +
+                  formatDate(
+                    image.createdAt ? image.createdAt : image.expireIndex,
+                  )
+                }
                 imageUrl={image.imageUrl}
               ></ActionCard>
             </Link>

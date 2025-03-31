@@ -17,6 +17,7 @@ export function ActionCard({imageUrl, name} : cardProp) {
           component="img"
           height="140"
           image={imageUrl}
+          loading='lazy'
           alt={name}
         />
         <CardContent>
