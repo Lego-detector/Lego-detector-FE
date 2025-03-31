@@ -1,19 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect, MouseEvent } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   AppBar,
   Button,
   Box,
   Container,
-  IconButton,
-  Menu,
   MenuItem,
   Toolbar,
   Typography,
 } from '@mui/material';
-import { Adb as AdbIcon, Menu as MenuIcon } from '@mui/icons-material';
+import { Adb as AdbIcon } from '@mui/icons-material';
 import { useAuth } from '../_contexts/AuthContext';
 import axiosInstance from '@/shared/utils/axios';
 import { useRouter } from 'next/navigation';
@@ -29,17 +27,8 @@ export default function Navbar() {
   const router = useRouter();
   const { user, logout } = useAuth();
   const { quota, setQuota } = useQuota();
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
-  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  async function getUserQuota() {
+  const getUserQuota = useCallback(async () => {
     try {
       const axiosRes = await axiosInstance(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/quota`,
@@ -53,13 +42,13 @@ export default function Navbar() {
     } catch (err) {
       console.log(err);
     }
-  }
+  }, [setQuota]);
 
   useEffect(() => {
-    if (!!getCredentials().accessToken){
+    if (!!getCredentials().accessToken) {
       getUserQuota();
     }
-  }, [quota]);
+  }, [getUserQuota]);
 
   return (
     <AppBar position="static" className="AppBar">
@@ -89,7 +78,6 @@ export default function Navbar() {
               adminOptions.map((page) => (
                 <Link key={page} href={page.toLowerCase()}>
                   <Button
-                    onClick={handleCloseNavMenu}
                     sx={{
                       my: 2,
                       color: 'white',
@@ -110,7 +98,6 @@ export default function Navbar() {
               <MenuItem
                 key={page}
                 onClick={() => {
-                  handleCloseNavMenu();
                   if (page === 'Logout') {
                     logout();
                   } else if (page !== 'Profile' && page !== 'Quota') {
@@ -157,7 +144,6 @@ export default function Navbar() {
             guestOptions.map((option) => (
               <Link key={option} href={option.toLowerCase()}>
                 <Button
-                  onClick={handleCloseNavMenu}
                   sx={{
                     my: 2,
                     mx: 1,

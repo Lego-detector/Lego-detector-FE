@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BoundingBox, ClassNames } from '../types';
 import { Stage, Layer, Rect, Image as KonvaImage } from 'react-konva';
 import useImage from 'use-image';
