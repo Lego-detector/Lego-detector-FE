@@ -2,20 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* styles.css */
+.md-card {
+  @apply max-w-md mx-auto mt-10 p-6 rounded-xl shadow-md bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-300;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  margin: 0;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+a {
+  text-decoration: none !important;
+}
+
+a:visited, a:hover, a:active, a:focus {
+  color: inherit !important;
+  text-decoration: none !important;
+  outline: none !important;
 }
